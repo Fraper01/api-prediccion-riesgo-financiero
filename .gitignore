@@ -1,0 +1,10 @@
+﻿# Archivos de modelos binarios
+*.joblib
+
+# Entornos virtuales
+venv/
+.venv/
+
+# Archivos de caché y de sistema
+__pycache__/
+.DS_Store

@@ -1,0 +1,287 @@
+<!--
+================================================================================
+ Página web para interactuar con la API de predicción de modelos de préstamo.
+ Utiliza un solo formulario, un diseño de cuadrícula y JavaScript para
+ manejar múltiples botones y mostrar los resultados.
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predicción de Riesgo de Préstamo</title>
+    <!-- Incluimos Tailwind CSS para un diseño moderno y responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            /* Fuente Inter para una estética moderna y legible */
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white p-8 rounded-2xl shadow-xl max-w-5xl w-full">
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-4">Predicción de Riesgo de Préstamo</h1>
+        <p class="text-center text-gray-600 mb-8">
+            Introduce los datos del solicitante y obtén una predicción.
+            <br>
+            <span class="text-sm italic text-gray-500">
+                Asegúrate de que tu servidor Python (`app.py`) esté en ejecución en el puerto 5000.
+            </span>
+        </p>
+
+        <form id="predictionForm" class="space-y-6">
+
+            <div class="grid md:grid-cols-2 gap-x-8 gap-y-6">
+
+                <!-- Campos numéricos -->
+                <div class="space-y-4">
+                    <h2 class="text-xl font-semibold text-gray-700">Datos Financieros y Personales</h2>
+                    <div>
+                        <label for="ingreso" class="block text-sm font-medium text-gray-700">Ingreso</label>
+                        <input type="number" id="ingreso" name="Ingreso" step="any" value="40000.0"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="puntaje_credito" class="block text-sm font-medium text-gray-700">Puntaje de
+                            Crédito</label>
+                        <input type="number" id="puntaje_credito" name="Puntaje de Crédito" step="any" value="650.0"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="monto_prestamo" class="block text-sm font-medium text-gray-700">Monto del
+                            Préstamo</label>
+                        <input type="number" id="monto_prestamo" name="Monto del Préstamo" step="any" value="20000.0"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="relacion_deuda_ingreso" class="block text-sm font-medium text-gray-700">Relación
+                            Deuda-Ingreso</label>
+                        <input type="number" id="relacion_deuda_ingreso" name="Relación Deuda-Ingreso" step="any"
+                            value="0.35"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="valor_activos" class="block text-sm font-medium text-gray-700">Valor de
+                            Activos</label>
+                        <input type="number" id="valor_activos" name="Valor de Activos" step="any" value="50000.0"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="incumplimientos_previos"
+                            class="block text-sm font-medium text-gray-700">Incumplimientos Previos</label>
+                        <input type="number" id="incumplimientos_previos" name="Incumplimientos Previos" step="1"
+                            value="1.0"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="edad" class="block text-sm font-medium text-gray-700">Edad</label>
+                        <input type="number" id="edad" name="Edad" step="1" value="40"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="anos_empleo" class="block text-sm font-medium text-gray-700">Años en el Empleo
+                            Actual</label>
+                        <input type="number" id="anos_empleo" name="Años en el Empleo Actual" step="any" value="3"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="numero_dependientes" class="block text-sm font-medium text-gray-700">Número de
+                            Dependientes</label>
+                        <input type="number" id="numero_dependientes" name="Número de Dependientes" step="1" value="1"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+
+                <!-- Campos de selección -->
+                <div class="space-y-4">
+                    <h2 class="text-xl font-semibold text-gray-700">Datos Categóricos</h2>
+                    <div>
+                        <label for="genero" class="block text-sm font-medium text-gray-700">Género</label>
+                        <select id="genero" name="Género"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option>Male</option>
+                            <option>Female</option>
+                            <option>Non-binary</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="nivel_educativo" class="block text-sm font-medium text-gray-700">Nivel
+                            Educativo</label>
+                        <select id="nivel_educativo" name="Nivel Educativo"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option value="High School">High School</option>
+                            <option value="Bachelor's">Bachelor's</option>
+                            <option value="Master's">Master's</option>
+                            <option value="PhD">PhD</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="estado_civil" class="block text-sm font-medium text-gray-700">Estado Civil</label>
+                        <select id="estado_civil" name="Estado Civil"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option>Married</option>
+                            <option>Single</option>
+                            <option>Divorced</option>
+                            <option>Widowed</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="proposito_prestamo" class="block text-sm font-medium text-gray-700">Propósito del
+                            Préstamo</label>
+                        <select id="proposito_prestamo" name="Propósito del Préstamo"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option>Home</option>
+                            <option>Auto</option>
+                            <option>Business</option>
+                            <option>Personal</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="situacion_laboral" class="block text-sm font-medium text-gray-700">Situación
+                            Laboral</label>
+                        <select id="situacion_laboral" name="Situación Laboral"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option>Employed</option>
+                            <option>Self-employed</option>
+                            <option>Unemployed</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="historial_pagos" class="block text-sm font-medium text-gray-700">Historial de
+                            Pagos</label>
+                        <select id="historial_pagos" name="Historial de Pagos"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option>Excellent</option>
+                            <option>Good</option>
+                            <option>Fair</option>
+                            <option>Poor</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="cambio_estado_civil" class="block text-sm font-medium text-gray-700">Número de Cambios de Estado Civil</label>
+                        <select id="cambio_estado_civil" name="Cambio de Estado Civil"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option>0</option>
+                            <option>1</option>
+                            <option>2</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Contenedor para los botones -->
+            <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 pt-4">
+                <button type="submit" id="predictBtnKNN" data-model="knn"
+                    class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold text-lg hover:bg-blue-700 transition duration-300 shadow-lg">
+                    Predecir con Modelo KNN
+                </button>
+                <button type="submit" id="predictBtnArbol" data-model="arbol"
+                    class="w-full bg-indigo-600 text-white py-3 rounded-lg font-bold text-lg hover:bg-indigo-700 transition duration-300 shadow-lg">
+                    Predecir con Modelo Árbol
+                </button>
+            </div>
+
+            <!-- Área para mostrar el resultado -->
+            <div id="resultContainer"
+                class="mt-6 p-4 bg-gray-200 text-gray-800 rounded-lg hidden font-medium text-center">
+            </div>
+
+        </form>
+    </div>
+
+    <!-- Script de JavaScript para la comunicación con la API -->
+    <script>
+        // =========================================================================
+        // Lógica para enviar los datos a la API de Flask y mostrar la predicción
+        // =========================================================================
+
+        const API_BASE_URL = 'http://127.0.0.1:5000';
+        const form = document.getElementById('predictionForm');
+        const resultContainer = document.getElementById('resultContainer');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Previene el envío del formulario por defecto
+
+            const model = e.submitter.getAttribute('data-model');
+            const endpoint = model === 'knn' ? '/predict_knn' : '/predict_arbol';
+
+            resultContainer.textContent = 'Calculando...';
+            resultContainer.className = 'mt-6 p-4 bg-gray-200 text-gray-800 rounded-lg font-medium text-center';
+
+            // Recopila todos los datos del formulario.
+            const data = {
+                'Ingreso': parseFloat(document.getElementById('ingreso').value),
+                'Puntaje de Crédito': parseFloat(document.getElementById('puntaje_credito').value),
+                'Monto del Préstamo': parseFloat(document.getElementById('monto_prestamo').value),
+                'Relación Deuda-Ingreso': parseFloat(document.getElementById('relacion_deuda_ingreso').value),
+                'Valor de Activos': parseFloat(document.getElementById('valor_activos').value),
+                'Incumplimientos Previos': parseFloat(document.getElementById('incumplimientos_previos').value),
+                'Edad': parseFloat(document.getElementById('edad').value),
+                'Años en el Empleo Actual': parseFloat(document.getElementById('anos_empleo').value),
+                'Número de Dependientes': parseFloat(document.getElementById('numero_dependientes').value),
+                'Género': document.getElementById('genero').value,
+                'Nivel Educativo': document.getElementById('nivel_educativo').value,
+                'Estado Civil': document.getElementById('estado_civil').value,
+                'Propósito del Préstamo': document.getElementById('proposito_prestamo').value,
+                'Situación Laboral': document.getElementById('situacion_laboral').value,
+                'Historial de Pagos': document.getElementById('historial_pagos').value,
+                'Cambio de Estado Civil': parseFloat(document.getElementById('cambio_estado_civil').value),
+            };
+
+            try {
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Error en la solicitud.');
+                }
+
+                const result = await response.json();
+
+                resultContainer.innerHTML = `
+                    <p><strong>Predicción del modelo ${model.toUpperCase()}:</strong></p>
+                    <p><strong>Predicción Numérica:</strong> ${result.prediction_numerica}</p>
+                    <p><strong>Predicción de Texto:</strong> ${result.prediction_texto}</p>
+                `;
+
+                // Asigna clases de Tailwind en función de la predicción de riesgo
+                if (result.prediction_texto === 'Bajo') {
+                    resultContainer.classList.add('bg-green-100', 'text-green-800');
+                } else if (result.prediction_texto === 'Medio') {
+                    resultContainer.classList.add('bg-yellow-100', 'text-yellow-800');
+                } else {
+                    resultContainer.classList.add('bg-red-100', 'text-red-800');
+                }
+                
+                resultContainer.classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Error:', error);
+                
+                let errorMessage = 'Ha ocurrido un error desconocido.';
+                if (error.message === 'Failed to fetch') {
+                    errorMessage = 'Error de conexión. Asegúrate de que el servidor de la API esté en ejecución.';
+                } else {
+                    errorMessage = `Error: ${error.message}`;
+                }
+
+                resultContainer.textContent = errorMessage;
+                resultContainer.classList.add('bg-red-100', 'text-red-800');
+            }
+        });
+    </script>
+</body>
+
+</html>
